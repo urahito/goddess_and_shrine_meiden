@@ -11,20 +11,23 @@ def get_path(type):
         return os.path.join(root,'章') 
     return ''
 
+def is_exist_dir(path):
+    return os.path.exists(path) and os.path.isdir(path)
+
 def write_text(path, content):    
     try:
         # 書き込み先にutf-8で書き込む
-        write_text = codecs.open(path, 'w', 'utf-8')
+        write_file = codecs.open(path, 'w', 'utf-8')
         for line in content:
             if '.md' in path:
-                write_text.write(line + '\r\n')
+                write_file.write(line + '\r\n')
             else:
-                write_text.write(line)
+                write_file.write(line)
     except IOError as ex:
         print(ex)
         return False
     finally:
-        write_text.close()
+        write_file.close()
 
     print('output: ' + path)  
     return True
@@ -48,7 +51,7 @@ def write_story(path, content):
 
     # 1話ごとのフォルダを作る
     new_file_dir = get_path('story')
-    if not (os.path.exists(new_file_dir) and os.path.isdir(new_file_dir)):
+    if not is_exist_dir(new_file_dir):
         os.mkdir(new_file_dir)
     
     # 1話ごとのファイルのパス
@@ -72,7 +75,7 @@ def write_chapter(path, content):
 
     # 1章ごとのフォルダを作る
     new_file_dir = get_path('chapter')
-    if not (os.path.exists(new_file_dir) and os.path.isdir(new_file_dir)):
+    if not is_exist_dir(new_file_dir):
         os.mkdir(new_file_dir)
     
     # 1章ごとのファイルのパス
@@ -85,7 +88,7 @@ def write_chapter(path, content):
 # ファイルの読み込み
 def read_content(path, content):
     # 存在するファイルでなければ処理しない
-    if not (os.path.exists(path) and os.path.isfile(path)):
+    if not is_text_file(path):
         return content
 
     try:
@@ -105,6 +108,10 @@ def read_content(path, content):
     return content
 
 def is_text_file(path):
+    # 存在するファイルでなければ処理しない
+    if not (os.path.exists(path) and os.path.isfile(path)):
+        return False
+
     root, ext = os.path.splitext(path)
     return (ext == '.txt')
 
@@ -113,7 +120,7 @@ def merge_story():
     paragraph_dir = get_path('paragraph')
 
     # フォルダが存在しなければ処理を停止
-    if not (os.path.exists(paragraph_dir) and os.path.isdir(paragraph_dir)) and ('単品' not in paragraph_dir):
+    if not is_exist_dir(paragraph_dir) and ('単品' not in paragraph_dir):
         return
 
     # 読み込みと書き出し
@@ -142,7 +149,7 @@ def merge_chapter():
     story_dir = get_path('story')
 
     # フォルダが存在しなければ処理を停止
-    if not (os.path.exists(story_dir) and os.path.isdir(story_dir)) and ('話' not in story_dir):
+    if not is_exist_dir(story_dir) and ('話' not in story_dir):
         return
 
     # 読み込みと書き出し
