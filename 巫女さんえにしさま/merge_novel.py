@@ -1,7 +1,7 @@
 import os,sys,codecs,re
 
 def get_path(type):
-    root = 'D:\\ドキュメント\\小説\\goddess_and_shrine_meiden\\巫女さんえにしさま'
+    root = os.path.dirname(os.path.abspath( __file__ ))
 
     if type == 'paragraph':
         return os.path.join(root,'単品') 
