@@ -11,12 +11,12 @@ def get_path(type):
         return os.path.join(root,'章') 
     return ''
 
-def write_text(path, content, chapter):    
+def write_text(path, content):    
     try:
         # 書き込み先にutf-8で書き込む
         write_text = codecs.open(path, 'w', 'utf-8')
         for line in content:
-            if chapter == True:
+            if '.md' in path:
                 write_text.write(line + '\r\n')
             else:
                 write_text.write(line)
@@ -55,7 +55,7 @@ def write_story(path, content):
     new_file_path = os.path.join(new_file_dir, new_file_name)
 
     # 書き込みと結果を返す
-    return write_text(new_file_path, content, False)
+    return write_text(new_file_path, content)
 
 def write_chapter(path, content):
     # ex)ファイル名頭の'1'などをpathから抽出する
@@ -79,14 +79,14 @@ def write_chapter(path, content):
     new_file_path = os.path.join(new_file_dir, new_file_name)
 
     # 書き込みと結果を返す
-    return write_text(new_file_path, content, True)
+    return write_text(new_file_path, content)
 
 
 # ファイルの読み込み
 def read_content(path, content):
     # 存在するファイルでなければ処理しない
     if not (os.path.exists(path) and os.path.isfile(path)):
-        return False, content
+        return content
 
     try:
         # ファイルをutf-8で開く
@@ -154,15 +154,18 @@ def merge_chapter():
         # テキストファイルであることを確認
         if not is_text_file(read_path):
             continue
-
-        # ファイルの読み込み        
+    
+        # 1話ごとにH1で仮タイトルを付ける
         root, ext = os.path.splitext(read_text)
-        content.append('\r\n# chapter ' + root + '\r\n\r\n')
+        content.append('# chapter ' + root + '\r\n\r\n')
 
+        # ファイルの読み込み    
         content = read_content(read_path, content)
 
+        content.append('\r\n')
 
-        # ファイルが1章の終わり(+付き)なら書き込む
+
+        # ファイルが1章の終わり(!付き)なら書き込む
         if '!' in read_text:
             if not write_chapter(read_text, content):
                 print('Failed output')
