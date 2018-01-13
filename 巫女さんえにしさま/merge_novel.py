@@ -11,11 +11,15 @@ def get_path(type):
         return os.path.join(root,'章') 
     return ''
 
-def write_text(path, content):    
+def write_text(path, content, chapter):    
     try:
         # 書き込み先にutf-8で書き込む
         write_text = codecs.open(path, 'w', 'utf-8')
-        write_text.writelines(content)
+        for line in content:
+            if chapter == True:
+                write_text.write(line + '\r\n')
+            else:
+                write_text.write(line)
     except IOError as ex:
         print(ex)
         return False
@@ -51,7 +55,7 @@ def write_story(path, content):
     new_file_path = os.path.join(new_file_dir, new_file_name)
 
     # 書き込みと結果を返す
-    return write_text(new_file_path, content)
+    return write_text(new_file_path, content, False)
 
 def write_chapter(path, content):
     # ex)ファイル名頭の'1'などをpathから抽出する
@@ -75,7 +79,7 @@ def write_chapter(path, content):
     new_file_path = os.path.join(new_file_dir, new_file_name)
 
     # 書き込みと結果を返す
-    return write_text(new_file_path, content)
+    return write_text(new_file_path, content, True)
 
 
 # ファイルの読み込み
