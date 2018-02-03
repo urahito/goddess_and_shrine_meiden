@@ -40,8 +40,6 @@ def write_text(path, content):
     except IOError as ex:
         print(ex)
         return False
-    finally:
-        write_file.close()
 
     print('output: ' + path)  
     return True
