@@ -1,4 +1,14 @@
 import os,sys,codecs,re
+import weakref, enum
+
+_files = weakref.WeakValueDictionary()
+
+def share_file(filename, mode):
+    if filename not in _files:
+        ret = codecs.open(filename, mode, 'utf-8')
+    else:
+        ret = _files[filename]
+    return ret
 
 def get_path(type):
     root = os.path.dirname(os.path.abspath( __file__ ))
@@ -17,7 +27,7 @@ def is_exist_dir(path):
 def write_text(path, content):    
     try:
         # 書き込み先にutf-8で書き込む
-        write_file = codecs.open(path, 'w', 'utf-8')
+        write_file = share_file(path, 'w')
         for line in content:
             if '.md' in path:
                 write_file.write(line + '\r\n')
@@ -93,7 +103,7 @@ def read_content(path, content):
 
     try:
         # ファイルをutf-8で開く
-        open_text = codecs.open(path, 'r', 'utf-8')
+        open_text = share_file(path, 'r')
 
         # 行ごとにリストに追記する
         for line in open_text.readlines():
@@ -102,8 +112,6 @@ def read_content(path, content):
     except IOError as ex:
         print(ex)
         return content
-    finally:
-        open_text.close()
     
     return content
 
