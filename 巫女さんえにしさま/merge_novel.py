@@ -10,6 +10,10 @@ def share_file(filename, mode):
         ret = _files[filename]
     return ret
 
+def get_match_pattern(path, pattern):
+    repatter = re.compile(pattern)
+    return repatter.match(path)
+
 def get_path(type):
     root = os.path.dirname(os.path.abspath( __file__ ))
 
@@ -45,9 +49,7 @@ def write_text(path, content):
 # ファイルの書き込み
 def write_story(path, content):
     # ex)ファイル名頭の'1-1'などをpathから抽出する
-    pattern = r"[0-9]+-[0-9]+"
-    repatter = re.compile(pattern)
-    matchOB = repatter.match(path)
+    matchOB = get_match_pattern(path, r"[0-9]+-[0-9]+")
 
     # ファイルのパターンが一致しなければ書き込まない
     if not matchOB:
@@ -72,9 +74,7 @@ def write_story(path, content):
 
 def write_chapter(path, content):
     # ex)ファイル名頭の'1'などをpathから抽出する
-    pattern = r"[0-9]+?"
-    repatter = re.compile(pattern)
-    matchOB = repatter.match(path)
+    matchOB = get_match_pattern(path, r"[0-9]+?")
 
     # ファイルのパターンが一致しなければ書き込まない
     if not matchOB:
