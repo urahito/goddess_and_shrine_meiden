@@ -1,5 +1,5 @@
 import os,sys,codecs,re
-import weakref, enum
+import weakref
 
 _files = weakref.WeakValueDictionary()
 
@@ -100,12 +100,8 @@ def read_content(path, content):
         return content
 
     try:
-        # ファイルをutf-8で開く
-        open_text = share_file(path, 'r')
-
-        # 行ごとにリストに追記する
-        for line in open_text.readlines():
-            content.append(line)  
+        # ファイルをutf-8で開き、すべて読み込む
+        content = list(share_file(path, 'r'))
         
     except IOError as ex:
         print(ex)
