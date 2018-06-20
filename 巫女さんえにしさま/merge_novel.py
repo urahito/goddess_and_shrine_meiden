@@ -101,7 +101,7 @@ def read_content(path, content):
 
     try:
         # ファイルをutf-8で開き、すべて読み込む
-        content = list(share_file(path, 'r'))
+        content.extend(list(share_file(path, 'r')))
         
     except IOError as ex:
         print(ex)
