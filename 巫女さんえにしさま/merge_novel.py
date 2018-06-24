@@ -34,7 +34,11 @@ def write_text(path, content):
         write_file = share_file(path, 'w')
         for line in content:
             if '.md' in path:
-                write_file.write(line + '\r\n')
+                rep_str = '\r\n'
+                if line.find('\r\n\r\n') > 0:
+                    rep_str = '\r\n\r\n'
+                md_space = line.replace(rep_str, '  ' + rep_str)
+                write_file.write(md_space)
             else:
                 write_file.write(line)
     except IOError as ex:
